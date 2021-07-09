@@ -7,8 +7,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/go-gl/gl/v4.3-core/gl"
-	"github.com/go-gl/glfw/v3.2/glfw"
+	gl "github.com/go-gl/gl/v3.1/gles2"
+	"github.com/go-gl/glfw/v3.3/glfw"
 )
 
 const (
@@ -17,13 +17,13 @@ const (
 )
 
 var (
-	vao         uint32
-	cameraX	    float32 = -0.5
-	cameraY		float32 = 0.0
-	zoom        float32 = 1.0
-	power  		float32 = 1.0
-	infinity  	float32 = 1e32
-	iterations  int32 = 100
+	vao        uint32
+	cameraX    float32 = -0.5
+	cameraY    float32 = 0.0
+	zoom       float32 = 1.0
+	power      float32 = 1.0
+	infinity   float32 = 1e32
+	iterations int32   = 100
 
 	frames            = 0
 	frameLength       float32
@@ -34,7 +34,6 @@ var (
 func init() {
 	runtime.LockOSThread()
 }
-
 
 func compileShader(filename string, shaderType uint32) (uint32, error) {
 	shader := gl.CreateShader(shaderType)
@@ -62,7 +61,6 @@ func compileShader(filename string, shaderType uint32) (uint32, error) {
 
 }
 
-
 func main() {
 
 	err := glfw.Init()
@@ -71,10 +69,8 @@ func main() {
 	}
 
 	glfw.WindowHint(glfw.Resizable, glfw.False)
-	glfw.WindowHint(glfw.ContextVersionMajor, 4)
-	glfw.WindowHint(glfw.ContextVersionMinor, 3)
-	glfw.WindowHint(glfw.OpenGLProfile, glfw.OpenGLCoreProfile)
-	glfw.WindowHint(glfw.OpenGLForwardCompatible, glfw.True)
+	glfw.WindowHint(glfw.ContextVersionMajor, 3)
+	glfw.WindowHint(glfw.ContextVersionMinor, 1)
 
 	window, err := glfw.CreateWindow(width, height, windowTitlePrefix, nil, nil)
 	if err != nil {
@@ -112,7 +108,7 @@ func main() {
 
 	gl.GenVertexArrays(1, &vao)
 
-	gl.ClearColor(0,0,0,1)
+	gl.ClearColor(0, 0, 0, 1)
 
 	for !window.ShouldClose() {
 
@@ -124,29 +120,29 @@ func main() {
 			window.SetShouldClose(true)
 		}
 		if window.GetKey(glfw.KeyLeft) == glfw.Press {
-			cameraX -= frameLength*zoom
+			cameraX -= frameLength * zoom
 		}
 		if window.GetKey(glfw.KeyRight) == glfw.Press {
-			cameraX += frameLength*zoom
+			cameraX += frameLength * zoom
 		}
 		if window.GetKey(glfw.KeyUp) == glfw.Press {
-			cameraY += frameLength*zoom
+			cameraY += frameLength * zoom
 		}
 		if window.GetKey(glfw.KeyDown) == glfw.Press {
-			cameraY -= frameLength*zoom
+			cameraY -= frameLength * zoom
 		}
 		if window.GetKey(glfw.KeySpace) == glfw.Press {
-			zoom /= 1+frameLength
+			zoom /= 1 + frameLength
 		}
 		if window.GetKey(glfw.KeyLeftControl) == glfw.Press {
-			zoom *= 1+frameLength
+			zoom *= 1 + frameLength
 		}
 
 		if window.GetKey(glfw.KeyA) == glfw.Press {
-			power /= 1+frameLength
+			power /= 1 + frameLength
 		}
 		if window.GetKey(glfw.KeyD) == glfw.Press {
-			power *= 1+frameLength
+			power *= 1 + frameLength
 		}
 
 		if window.GetKey(glfw.KeyW) == glfw.Press {
@@ -154,7 +150,9 @@ func main() {
 		}
 		if window.GetKey(glfw.KeyS) == glfw.Press {
 			iterations -= 1
-			if iterations < 1 { iterations = 1 }
+			if iterations < 1 {
+				iterations = 1
+			}
 		}
 
 		gl.UseProgram(program)
